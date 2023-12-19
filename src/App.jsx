@@ -9,7 +9,7 @@ import {
 
 function App() {
   return (
-    <div className="flex flex-col bg-neutral-100 w-screen h-screen space-y-3 p-3">
+    <div className="flex flex-col w-screen h-screen p-3 space-y-3 bg-neutral-100">
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>File</MenubarTrigger>
