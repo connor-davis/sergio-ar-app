@@ -1,4 +1,5 @@
-import { Card } from "./components/ui/card";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { Card, CardContent } from "./components/ui/card";
 import {
   Menubar,
   MenubarContent,
@@ -6,23 +7,75 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "./components/ui/menubar";
+import ShiftGroup from "./components/shift-group";
+import axios from "axios";
+import apiUrl from "./lib/apiUrl";
+import { useEffect, useState } from "react";
+import { Input } from "./components/ui/input";
+import ImportDataModal from "./components/modals/import-data";
+import ExportDataModal from "./components/modals/export-data";
 
 function App() {
+  const [shiftGroups, setShiftGroups] = useState([]);
+  const [searchShiftGroupValue, setSearchShiftGroupValue] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const disposeableTimeout = setTimeout(async () => {
+      const shiftGroupsResponse = await axios.get(apiUrl + "/shift-groups");
+
+      if (shiftGroupsResponse.status === 200) {
+        setShiftGroups(
+          shiftGroupsResponse.data.shift_groups
+            .filter(({ shift_group }) =>
+              shift_group.includes(searchShiftGroupValue)
+            )
+            .sort((a, b) => {
+              return a.shift_group.localeCompare(b.shift_group);
+            })
+        );
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(disposeableTimeout);
+    };
+  }, [searchShiftGroupValue]);
+
   return (
     <div className="flex flex-col w-screen h-screen p-3 space-y-3 bg-neutral-100">
-      <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger>File</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Import</MenubarItem>
-            <MenubarItem>Export</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+      <Card className="w-full h-auto p-3 space-x-3">
+        <ImportDataModal />
+        <ExportDataModal shiftGroups={shiftGroups} />
+      </Card>
 
       <div className="flex w-full h-full space-x-3 overflow-hidden">
-        <Card className="w-1/4 h-full overflow-y-auto"></Card>
-        <Card className="w-full h-full overflow-y-auto"></Card>
+        <Card className="h-full w-[600px] p-3 pb-16 space-y-3">
+          <Input
+            placeholder="Search Shift Group"
+            value={searchShiftGroupValue}
+            onChange={(event) => setSearchShiftGroupValue(event.target.value)}
+          />
+          <div className="flex flex-col w-full h-full space-y-3 overflow-y-auto">
+            {shiftGroups.map((shiftGroup, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between w-full h-12 px-3 py-2 space-x-3 rounded-md cursor-pointer hover:bg-neutral-200"
+                onClick={() => {
+                  navigate(`/${shiftGroup.shift_group}`);
+                }}
+              >
+                <div>{shiftGroup.shift_group}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+        <Card className="w-full h-full overflow-hidden">
+          <Routes>
+            <Route path="/" element={<div>Home</div>} />
+            <Route path="/:shift_group" Component={ShiftGroup} />
+          </Routes>
+        </Card>
       </div>
     </div>
   );
