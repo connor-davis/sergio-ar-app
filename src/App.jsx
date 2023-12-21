@@ -1,4 +1,3 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "./components/ui/card";
 import {
   Menubar,
@@ -7,13 +6,16 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "./components/ui/menubar";
-import ShiftGroup from "./components/shift-group";
-import axios from "axios";
-import apiUrl from "./lib/apiUrl";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Input } from "./components/ui/input";
-import ImportDataModal from "./components/modals/import-data";
+
 import ExportDataModal from "./components/modals/export-data";
+import HomePage from "./home";
+import ImportDataModal from "./components/modals/import-data";
+import { Input } from "./components/ui/input";
+import ShiftGroup from "./components/shift-group";
+import apiUrl from "./lib/apiUrl";
+import axios from "axios";
 
 function App() {
   const [shiftGroups, setShiftGroups] = useState([]);
@@ -72,7 +74,7 @@ function App() {
         </Card>
         <Card className="w-full h-full overflow-hidden">
           <Routes>
-            <Route path="/" element={<div>Home</div>} />
+            <Route path="/" Component={HomePage} />
             <Route path="/:shift_group" Component={ShiftGroup} />
           </Routes>
         </Card>
