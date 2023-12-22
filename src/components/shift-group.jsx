@@ -87,23 +87,7 @@ export default function ShiftGroup(
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
-      const shiftGroupResponse = await axios.get(
-        apiUrl + `/schedules?shift_group=${shift_group}`
-      );
-
-      if (shiftGroupResponse.status === 200) {
-        setData(
-          shiftGroupResponse.data.schedules.filter((schedule) => {
-            let start_date = new Date(schedule.start_date);
-            let end_date = new Date(schedule.end_date);
-
-            return (
-              months[start_date.getMonth()] === selectedMonth &&
-              start_date.getFullYear() === selectedYear
-            );
-          })
-        );
-      }
+      await getSchedules();
     }, 100);
 
     return () => {
@@ -120,6 +104,26 @@ export default function ShiftGroup(
       clearTimeout(disposeableTimeout);
     };
   }, []);
+
+  const getSchedules = async () => {
+    const shiftGroupResponse = await axios.get(
+      apiUrl + `/schedules?shift_group=${shift_group}`
+    );
+
+    if (shiftGroupResponse.status === 200) {
+      setData(
+        shiftGroupResponse.data.schedules.filter((schedule) => {
+          let start_date = new Date(schedule.start_date);
+          let end_date = new Date(schedule.end_date);
+
+          return (
+            months[start_date.getMonth()] === selectedMonth &&
+            start_date.getFullYear() === selectedYear
+          );
+        })
+      );
+    }
+  };
 
   const getShiftGroups = async () => {
     const shiftGroupsResponse = await axios.get(apiUrl + "/shift-groups");
@@ -138,7 +142,7 @@ export default function ShiftGroup(
       <Card className="w-full h-auto p-3 space-x-3">
         <ImportDataModal
           onDataImported={() => {
-            navigate("/");
+            getShiftGroups();
           }}
         />
         <ExportDataModal shiftGroups={shiftGroups} />
