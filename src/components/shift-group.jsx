@@ -144,7 +144,7 @@ export default function ShiftGroup(
         <ExportDataModal shiftGroups={shiftGroups} />
       </Card>
 
-      <Card className="w-full h-full overflow-hidden">
+      <Card className="w-full h-full p-3 space-y-3 overflow-hidden">
         <div className="flex flex-col w-full space-y-3">
           <div className="flex items-center justify-between">
             <div className="text-lg font-bold">{shift_group}</div>
