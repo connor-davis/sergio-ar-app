@@ -18,7 +18,7 @@ import { Input } from "../ui/input";
 import axios from "axios";
 import apiUrl from "../../lib/apiUrl";
 
-export default function ImportDataModal() {
+export default function ImportDataModal(onDataImported = () => {}) {
   const [date, setDate] = useState(new Date());
   const [importing, setImporting] = useState(false);
   const [imported, setImported] = useState(false);
@@ -108,6 +108,8 @@ export default function ImportDataModal() {
 
       setTimeout(() => {
         setImported(false);
+
+        onDataImported();
       }, 5000);
     } else {
       setError(importResponse.data.message);

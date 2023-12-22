@@ -46,11 +46,6 @@ function App() {
 
   return (
     <div className="flex flex-col w-screen h-screen p-3 space-y-3 bg-neutral-100">
-      <Card className="w-full h-auto p-3 space-x-3">
-        <ImportDataModal />
-        <ExportDataModal shiftGroups={shiftGroups} />
-      </Card>
-
       <div className="flex w-full h-full space-x-3 overflow-hidden">
         <Card className="h-full w-[600px] p-3 pb-16 space-y-3">
           <Input
@@ -72,12 +67,10 @@ function App() {
             ))}
           </div>
         </Card>
-        <Card className="w-full h-full overflow-hidden">
-          <Routes>
-            <Route path="/" Component={HomePage} />
-            <Route path="/:shift_group" Component={ShiftGroup} />
-          </Routes>
-        </Card>
+        <Routes>
+          <Route path="/" Component={HomePage} />
+          <Route path="/:shift_group" Component={ShiftGroup} />
+        </Routes>
       </div>
     </div>
   );
