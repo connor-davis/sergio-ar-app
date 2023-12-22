@@ -71,8 +71,7 @@ function App() {
         <Routes>
           <Route path="/" Component={HomePage} />
           <Route path="/:shift_group" Component={ShiftGroup} />
-          {/* 404 Route */}
-          <Route path="*" Component={NotFound} />
+          <Route path="**" Component={NotFound} />
         </Routes>
       </div>
     </div>
