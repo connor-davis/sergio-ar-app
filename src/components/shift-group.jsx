@@ -40,6 +40,8 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Card } from "./ui/card";
+import ImportDataModal from "./modals/import-data";
+import ExportDataModal from "./modals/export-data";
 
 export default function ShiftGroup(
   columns = [
