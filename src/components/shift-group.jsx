@@ -134,17 +134,17 @@ export default function ShiftGroup(
   };
 
   return (
-    <Card className="w-full h-full overflow-hidden">
-      <div className="flex flex-col w-full h-full p-3 space-y-3 overflow-hidden">
-        <Card className="w-full h-auto p-3 space-x-3">
-          <ImportDataModal
-            onDataImported={() => {
-              navigate("/");
-            }}
-          />
-          <ExportDataModal shiftGroups={shiftGroups} />
-        </Card>
+    <div className="flex flex-col w-full h-full p-3 space-y-3 overflow-hidden">
+      <Card className="w-full h-auto p-3 space-x-3">
+        <ImportDataModal
+          onDataImported={() => {
+            navigate("/");
+          }}
+        />
+        <ExportDataModal shiftGroups={shiftGroups} />
+      </Card>
 
+      <Card className="w-full h-full overflow-hidden">
         <div className="flex flex-col w-full space-y-3">
           <div className="flex items-center justify-between">
             <div className="text-lg font-bold">{shift_group}</div>
@@ -320,7 +320,7 @@ export default function ShiftGroup(
               </TabsContent>
             ))}
         </Tabs>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }
