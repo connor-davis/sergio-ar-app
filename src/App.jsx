@@ -16,6 +16,7 @@ import { Input } from "./components/ui/input";
 import ShiftGroup from "./components/shift-group";
 import apiUrl from "./lib/apiUrl";
 import axios from "axios";
+import NotFound from "./not-found";
 
 function App() {
   const [shiftGroups, setShiftGroups] = useState([]);
@@ -70,6 +71,8 @@ function App() {
         <Routes>
           <Route path="/" Component={HomePage} />
           <Route path="/:shift_group" Component={ShiftGroup} />
+          {/* 404 Route */}
+          <Route path="*" Component={NotFound} />
         </Routes>
       </div>
     </div>
