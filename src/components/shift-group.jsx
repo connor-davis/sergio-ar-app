@@ -114,7 +114,6 @@ export default function ShiftGroup(
       setData(
         shiftGroupResponse.data.schedules.filter((schedule) => {
           let start_date = new Date(schedule.start_date);
-          let end_date = new Date(schedule.end_date);
 
           return (
             months[start_date.getMonth()] === selectedMonth &&
@@ -142,14 +141,12 @@ export default function ShiftGroup(
       <Card className="w-full h-auto p-3 space-x-3">
         <ImportDataModal
           onDataImported={() => {
-            (async () => {
-              console.log("Data imported. Refreshing state.");
+            console.log("Data imported. Refreshing state.");
 
-              await getShiftGroups();
-              await getSchedules();
+            getShiftGroups();
+            getSchedules();
 
-              console.log("State refreshed.");
-            })();
+            console.log("State refreshed.");
           }}
         />
         <ExportDataModal shiftGroups={shiftGroups} />
