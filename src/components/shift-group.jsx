@@ -126,13 +126,9 @@ export default function ShiftGroup(
 
     if (shiftGroupsResponse.status === 200) {
       setShiftGroups(
-        shiftGroupsResponse.data.shift_groups
-          .filter(({ shift_group }) =>
-            shift_group.includes(searchShiftGroupValue)
-          )
-          .sort((a, b) => {
-            return a.shift_group.localeCompare(b.shift_group);
-          })
+        shiftGroupsResponse.data.shift_groups.sort((a, b) => {
+          return a.shift_group.localeCompare(b.shift_group);
+        })
       );
     }
   };
