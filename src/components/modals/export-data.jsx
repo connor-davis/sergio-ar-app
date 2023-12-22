@@ -80,6 +80,10 @@ export default function ExportDataModal() {
 
     setExporting(false);
     setExported(true);
+
+    setTimeout(() => {
+      setExported(false);
+    }, 5000);
   };
 
   const exportData = async (shiftGroup) => {
@@ -260,7 +264,10 @@ export default function ExportDataModal() {
         )}
         {exporting && !exported && <div>Exporting data...</div>}
         {!exporting && exported && (
-          <div className="grid w-full h-auto grid-cols-2 gap-3"></div>
+          <div className="grid w-full h-auto grid-cols-2 gap-3">
+            Data has been exported. Find the corresponding export reports in
+            your downloads folder.
+          </div>
         )}
         <DialogFooter>
           <Button
