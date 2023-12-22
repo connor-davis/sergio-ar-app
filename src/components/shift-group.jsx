@@ -142,7 +142,14 @@ export default function ShiftGroup(
       <Card className="w-full h-auto p-3 space-x-3">
         <ImportDataModal
           onDataImported={() => {
-            getShiftGroups();
+            (async () => {
+              console.log("Data imported. Refreshing state.");
+
+              await getShiftGroups();
+              await getSchedules();
+
+              console.log("State refreshed.");
+            })();
           }}
         />
         <ExportDataModal shiftGroups={shiftGroups} />
