@@ -1,15 +1,12 @@
+import { Check, ChevronsUpDown } from "lucide-react";
 import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import apiUrl from "../lib/apiUrl";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "./ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Table,
   TableBody,
@@ -18,8 +15,15 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { DropdownMenu } from "./ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   format,
   getDaysInMonth,
@@ -28,20 +32,17 @@ import {
   monthsInYear,
   parse,
 } from "date-fns";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "./ui/command";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { Button } from "./ui/button";
-import { cn } from "../lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Card } from "./ui/card";
-import ImportDataModal from "./modals/import-data";
+import { DropdownMenu } from "./ui/dropdown-menu";
 import ExportDataModal from "./modals/export-data";
+import ImportDataModal from "./modals/import-data";
+import apiUrl from "../lib/apiUrl";
+import axios from "axios";
+import { cn } from "../lib/utils";
+import { useParams } from "react-router-dom";
 
 export default function ShiftGroup(
   columns = [
@@ -77,6 +78,7 @@ export default function ShiftGroup(
     "December",
   ]);
 
+  const [selectedDay, setSelectedDay] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState(
     months[getMonth(new Date())]
   );
@@ -107,7 +109,8 @@ export default function ShiftGroup(
 
   const getSchedules = async () => {
     const shiftGroupResponse = await axios.get(
-      apiUrl + `/schedules?shift_group=${shift_group}`
+      apiUrl +
+        `/schedules?shift_group=${shift_group}&start_date=${selectedYear}-${selectedMonth}-${selectedDay} 00:00:00&end_date=${selectedYear}-${selectedMonth}-${selectedDay} 23:59:59`
     );
 
     if (shiftGroupResponse.status === 200) {
@@ -250,9 +253,15 @@ export default function ShiftGroup(
             </div>
           </div>
         </div>
-        <Tabs defaultValue={1} className="flex flex-col w-full h-full pb-16">
+        <Tabs
+          defaultValue={selectedDay}
+          className="flex flex-col w-full h-full pb-16"
+        >
           <div className="flex w-full">
-            <TabsList className="justify-start w-full h-auto">
+            <TabsList
+              onValueChange={(value) => setSelectedDay(parseInt(value))}
+              className="justify-start w-full h-auto"
+            >
               <div className="flex items-center overflow-y-auto">
                 {Array(
                   getDaysInMonth(
