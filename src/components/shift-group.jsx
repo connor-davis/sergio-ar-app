@@ -90,12 +90,14 @@ export default function ShiftGroup(
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
       await getSchedules();
+
+      console.log(shift_group, selectedMonth, selectedYear, selectedDay);
     }, 100);
 
     return () => {
       clearTimeout(disposeableTimeout);
     };
-  }, [shift_group, selectedMonth, selectedYear]);
+  }, [shift_group, selectedMonth, selectedYear, selectedDay]);
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
@@ -108,9 +110,40 @@ export default function ShiftGroup(
   }, []);
 
   const getSchedules = async () => {
+    const date = new Date(
+      selectedYear,
+      months.indexOf(selectedMonth),
+      selectedDay
+    );
+
+    // Get midnight
+    const startDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      0,
+      0,
+      0,
+      0
+    );
+
+    // Get 11:59:59 PM
+    const endDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      getDaysInMonth(date),
+      23,
+      59,
+      59,
+      999
+    );
+
     const shiftGroupResponse = await axios.get(
       apiUrl +
-        `/schedules?shift_group=${shift_group}&start_date=${selectedYear}-${selectedMonth}-${selectedDay} 00:00:00&end_date=${selectedYear}-${selectedMonth}-${selectedDay} 23:59:59`
+        `/schedules?shift_group=${shift_group}&start_date=${format(
+          startDate,
+          "yyyy-MM-dd HH:mm:ss"
+        )}&end_date=${format(endDate, "yyyy-MM-dd HH:mm:ss")}`
     );
 
     if (shiftGroupResponse.status === 200) {
@@ -255,13 +288,11 @@ export default function ShiftGroup(
         </div>
         <Tabs
           defaultValue={selectedDay}
+          onValueChange={(value) => setSelectedDay(parseInt(value))}
           className="flex flex-col w-full h-full pb-16"
         >
           <div className="flex w-full">
-            <TabsList
-              onValueChange={(value) => setSelectedDay(parseInt(value))}
-              className="justify-start w-full h-auto"
-            >
+            <TabsList className="justify-start w-full h-auto">
               <div className="flex items-center overflow-y-auto">
                 {Array(
                   getDaysInMonth(
