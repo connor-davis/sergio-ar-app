@@ -1,9 +1,11 @@
-import { addDays, format } from "date-fns";
 import { CalendarIcon, Check, ChevronsUpDown, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { cn } from "../../lib/utils";
-import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "../ui/command";
 import {
   Dialog,
   DialogContent,
@@ -14,17 +16,17 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Card } from "../ui/card";
+import { addDays, format } from "date-fns";
+import { useEffect, useState } from "react";
+
 import { Badge } from "../ui/badge";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "../ui/command";
-import axios from "axios";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
+import { Card } from "../ui/card";
+import { Progress } from "../ui/progress";
 import apiUrl from "../../lib/apiUrl";
+import axios from "axios";
+import { cn } from "../../lib/utils";
 
 export default function ExportDataModal() {
   const [shiftGroups, setShiftGroups] = useState([]);
@@ -78,12 +80,14 @@ export default function ExportDataModal() {
       await exportData(group);
     }
 
-    setExporting(false);
-    setExported(true);
-
     setTimeout(() => {
-      setExported(false);
-    }, 5000);
+      setExporting(false);
+      setExported(true);
+
+      setTimeout(() => {
+        setExported(false);
+      }, 5000);
+    }, 3000);
   };
 
   const exportData = async (shiftGroup) => {
@@ -96,25 +100,51 @@ export default function ExportDataModal() {
           format(date.to, "yyyy-MM-dd") +
           "&shift_group=" +
           shiftGroup,
-        { responseType: "blob" }
+        {
+          responseType: "blob",
+        }
       )
       .then((response) => {
-        // Create a Blob from the response data
         const blob = new Blob([response.data], { type: "text/csv" });
-
-        // Use the `URL.createObjectURL` to create a temporary URL for the Blob
         const url = URL.createObjectURL(blob);
-
-        // Create a link element to trigger the download
         const link = document.createElement("a");
+
         link.href = url;
         link.download = shiftGroup + "-efficiency-report.csv";
 
-        // Append the link to the document and trigger a click event to start the download
         document.body.appendChild(link);
         link.click();
 
-        // Remove the link element from the document
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+
+    axios
+      .get(
+        apiUrl +
+          "/generate-consolidated-report?start_date=" +
+          format(date.from, "yyyy-MM-dd") +
+          "&end_date=" +
+          format(date.to, "yyyy-MM-dd") +
+          "&shift_group=" +
+          shiftGroup,
+        {
+          responseType: "blob",
+        }
+      )
+      .then((response) => {
+        const blob = new Blob([response.data], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = shiftGroup + "-consolidated-report.csv";
+
+        document.body.appendChild(link);
+        link.click();
+
         document.body.removeChild(link);
       })
       .catch((error) => {
@@ -262,7 +292,9 @@ export default function ExportDataModal() {
             </div>
           </div>
         )}
-        {exporting && !exported && <div>Exporting data...</div>}
+        {exporting && (
+          <div className="w-full text-center">Exporting data...</div>
+        )}
         {!exporting && exported && (
           <div className="grid w-full h-auto grid-cols-2 gap-3">
             Data has been exported. Find the corresponding export reports in

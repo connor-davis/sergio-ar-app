@@ -13,10 +13,10 @@ import ExportDataModal from "./components/modals/export-data";
 import HomePage from "./home";
 import ImportDataModal from "./components/modals/import-data";
 import { Input } from "./components/ui/input";
+import NotFound from "./not-found";
 import ShiftGroup from "./components/shift-group";
 import apiUrl from "./lib/apiUrl";
 import axios from "axios";
-import NotFound from "./not-found";
 
 function App() {
   const [shiftGroups, setShiftGroups] = useState([]);
@@ -71,7 +71,7 @@ function App() {
         <Routes>
           <Route path="/" Component={HomePage} />
           <Route path="/:shift_group" Component={ShiftGroup} />
-          <Route path="**" Component={NotFound} />
+          <Route path="*" Component={NotFound} />
         </Routes>
       </div>
     </div>
