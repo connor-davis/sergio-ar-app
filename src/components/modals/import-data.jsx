@@ -19,6 +19,8 @@ import axios from "axios";
 import apiUrl from "../../lib/apiUrl";
 
 export default function ImportDataModal({ onDataImported = () => {} }) {
+  const [open, setOpen] = useState(false);
+
   const [date, setDate] = useState(new Date());
   const [importing, setImporting] = useState(false);
   const [imported, setImported] = useState(false);
@@ -108,6 +110,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
 
       setTimeout(() => {
         setImported(false);
+        setOpen(false);
 
         onDataImported();
       }, 5000);
@@ -121,7 +124,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>
         <Button>Import Data</Button>
       </DialogTrigger>

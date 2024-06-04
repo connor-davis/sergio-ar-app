@@ -17,14 +17,18 @@ import NotFound from "./not-found";
 import ShiftGroup from "./components/shift-group";
 import apiUrl from "./lib/apiUrl";
 import axios from "axios";
+import Loading from "./components/loading";
 
 function App() {
+  const [loading, setLoading] = useState(false);
   const [shiftGroups, setShiftGroups] = useState([]);
   const [searchShiftGroupValue, setSearchShiftGroupValue] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const disposeableTimeout = setTimeout(async () => {
+      setLoading(true);
+
       const shiftGroupsResponse = await axios.get(apiUrl + "/shift-groups");
 
       if (shiftGroupsResponse.status === 200) {
@@ -37,6 +41,8 @@ function App() {
               return a.shift_group.localeCompare(b.shift_group);
             })
         );
+
+        setLoading(false);
       }
     }, 100);
 
@@ -44,6 +50,22 @@ function App() {
       clearTimeout(disposeableTimeout);
     };
   }, [searchShiftGroupValue]);
+
+  const getShiftGroups = async () => {
+    setLoading(true);
+
+    const shiftGroupsResponse = await axios.get(apiUrl + "/shift-groups");
+
+    if (shiftGroupsResponse.status === 200) {
+      setShiftGroups(
+        shiftGroupsResponse.data.shift_groups.sort((a, b) => {
+          return a.shift_group.localeCompare(b.shift_group);
+        })
+      );
+
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col w-screen h-screen p-3 space-y-3 bg-neutral-100">
@@ -55,24 +77,53 @@ function App() {
             onChange={(event) => setSearchShiftGroupValue(event.target.value)}
           />
           <div className="flex flex-col w-full h-full space-y-3 overflow-y-auto">
-            {shiftGroups.map((shiftGroup, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between w-full h-12 px-3 py-2 space-x-3 rounded-md cursor-pointer hover:bg-neutral-200"
-                onClick={() => {
-                  navigate(`/${shiftGroup.shift_group}`);
-                }}
-              >
-                <div>{shiftGroup.shift_group}</div>
+            {loading && (
+              <div className="flex flex-col items-center justify-center w-full h-full">
+                <Loading />
               </div>
-            ))}
+            )}
+
+            {!loading &&
+              shiftGroups.map((shiftGroup, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between w-full h-12 px-3 py-2 space-x-3 rounded-md cursor-pointer hover:bg-neutral-200"
+                  onClick={() => {
+                    navigate(`/${shiftGroup.shift_group}`);
+                  }}
+                >
+                  <div>{shiftGroup.shift_group}</div>
+                </div>
+              ))}
           </div>
         </Card>
-        <Routes>
-          <Route path="/" Component={HomePage} />
-          <Route path="/:shift_group" Component={ShiftGroup} />
-          <Route path="*" Component={NotFound} />
-        </Routes>
+
+        <div className="flex flex-col w-full h-full space-y-3">
+          <Card className="w-full h-auto p-3 space-x-3">
+            <ImportDataModal
+              onDataImported={() => {
+                getShiftGroups();
+              }}
+            />
+            <ExportDataModal shiftGroups={shiftGroups} />
+          </Card>
+
+          {loading && (
+            <Card className="w-full h-full p-3 space-y-3 overflow-hidden">
+              <div className="flex flex-col items-center justify-center w-full h-full">
+                <Loading />
+              </div>
+            </Card>
+          )}
+
+          {!loading && (
+            <Routes>
+              <Route path="/" Component={HomePage} />
+              <Route path="/:shift_group" Component={ShiftGroup} />
+              <Route path="*" Component={NotFound} />
+            </Routes>
+          )}
+        </div>
       </div>
     </div>
   );

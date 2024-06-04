@@ -174,20 +174,6 @@ export default function ShiftGroup(
 
   return (
     <div className="flex flex-col w-full h-full space-y-3 overflow-hidden">
-      <Card className="w-full h-auto p-3 space-x-3">
-        <ImportDataModal
-          onDataImported={() => {
-            console.log("Data imported. Refreshing state.");
-
-            getShiftGroups();
-            getSchedules();
-
-            console.log("State refreshed.");
-          }}
-        />
-        <ExportDataModal shiftGroups={shiftGroups} />
-      </Card>
-
       <Card className="w-full h-full p-3 space-y-3 overflow-hidden">
         <div className="flex flex-col w-full space-y-3">
           <div className="flex items-center justify-between">
