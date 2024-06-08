@@ -196,29 +196,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
         {importing && !imported && <div>Importing data...</div>}
         {!importing && imported && (
           <div className="grid w-full h-auto grid-cols-2 gap-3">
-            <div>{importResponse.message}</div>
-            <div></div>
-
-            <div>New Invoices</div>
-            <div>{importResponse.inserted_invoices}</div>
-
-            <div>Updated Invoices</div>
-            <div>{importResponse.updated_invoices}</div>
-
-            <div>Skipped Invoices</div>
-            <div>{importResponse.skipped_invoices}</div>
-
-            <div>New Shifts</div>
-            <div>{importResponse.new_shifts}</div>
-
-            <div>Skipped Shifts</div>
-            <div>{importResponse.skipped_shifts}</div>
-
-            <div>New Teachers</div>
-            <div>{importResponse.new_teachers}</div>
-
-            <div>Skipped Teachers</div>
-            <div>{importResponse.skipped_teachers}</div>
+            <div>{importResponse}</div>
           </div>
         )}
         <DialogFooter>
