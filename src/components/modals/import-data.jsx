@@ -194,11 +194,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
           </div>
         )}
         {importing && !imported && <div>Importing data...</div>}
-        {!importing && imported && (
-          <div className="grid w-full h-auto grid-cols-2 gap-3">
-            <div>{importResponse}</div>
-          </div>
-        )}
+        {!importing && imported && importResponse}
         <DialogFooter>
           <Button
             type="submit"
