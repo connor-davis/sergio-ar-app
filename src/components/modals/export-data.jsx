@@ -91,65 +91,36 @@ export default function ExportDataModal() {
   };
 
   const exportData = async (shiftGroup) => {
-    axios
-      .get(
-        apiUrl +
-          "/generate-efficiency-report?start_date=" +
-          format(date.from, "yyyy-MM-dd") +
-          "&end_date=" +
-          format(date.to, "yyyy-MM-dd") +
-          "&shift_group=" +
-          shiftGroup,
-        {
-          responseType: "blob",
-        }
-      )
-      .then((response) => {
-        const blob = new Blob([response.data], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
+    const consolidatedResponse = await axios.get(
+      apiUrl +
+        "/generate-consolidated-report?start_date=" +
+        format(date.from, "yyyy-MM-dd") +
+        "&end_date=" +
+        format(date.to, "yyyy-MM-dd") +
+        "&shift_group=" +
+        shiftGroup,
+      {
+        responseType: "blob",
+      }
+    );
 
-        link.href = url;
-        link.download = shiftGroup + "-efficiency-report.csv";
+    const consolidatedStatus = consolidatedResponse.status;
 
-        document.body.appendChild(link);
-        link.click();
+    if (consolidatedStatus !== 200) {
+      return alert("Failed consolidated");
+    }
 
-        document.body.removeChild(link);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    const blob = new Blob([consolidatedResponse.data], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
 
-    axios
-      .get(
-        apiUrl +
-          "/generate-consolidated-report?start_date=" +
-          format(date.from, "yyyy-MM-dd") +
-          "&end_date=" +
-          format(date.to, "yyyy-MM-dd") +
-          "&shift_group=" +
-          shiftGroup,
-        {
-          responseType: "blob",
-        }
-      )
-      .then((response) => {
-        const blob = new Blob([response.data], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
+    link.href = url;
+    link.download = shiftGroup + "-consolidated-report.csv";
 
-        link.href = url;
-        link.download = shiftGroup + "-consolidated-report.csv";
+    document.body.appendChild(link);
+    link.click();
 
-        document.body.appendChild(link);
-        link.click();
-
-        document.body.removeChild(link);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    document.body.removeChild(link);
   };
 
   return (
