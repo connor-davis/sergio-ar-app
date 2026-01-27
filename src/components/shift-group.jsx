@@ -53,7 +53,7 @@ export default function ShiftGroup(
         <div className="capitalize">{row.getValue("shift")}</div>
       ),
     },
-  ]
+  ],
 ) {
   const [shiftGroups, setShiftGroups] = useState([]);
 
@@ -61,7 +61,7 @@ export default function ShiftGroup(
   const [data, setData] = useState([]);
 
   const [years, setYears] = useState(
-    Array.from({ length: 10 }, (_, i) => i + 2023)
+    Array.from({ length: 10 }, (_, i) => i + 2023),
   );
   const [months, setMonths] = useState([
     "January",
@@ -80,7 +80,7 @@ export default function ShiftGroup(
 
   const [selectedDay, setSelectedDay] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState(
-    months[getMonth(new Date())]
+    months[getMonth(new Date())],
   );
   const [selectedYear, setSelectedYear] = useState(getYear(new Date()));
 
@@ -113,7 +113,7 @@ export default function ShiftGroup(
     const date = new Date(
       selectedYear,
       months.indexOf(selectedMonth),
-      selectedDay
+      selectedDay,
     );
 
     // Get midnight
@@ -124,7 +124,7 @@ export default function ShiftGroup(
       0,
       0,
       0,
-      0
+      0,
     );
 
     // Get 11:59:59 PM
@@ -135,15 +135,15 @@ export default function ShiftGroup(
       23,
       59,
       59,
-      999
+      999,
     );
 
     const shiftGroupResponse = await axios.get(
       apiUrl +
-        `/schedules?shift_group=${shift_group}&start_date=${format(
+        `/schedules?shift_group=${encodeURIComponent(shift_group)}&start_date=${format(
           startDate,
-          "yyyy-MM-dd HH:mm:ss"
-        )}&end_date=${format(endDate, "yyyy-MM-dd HH:mm:ss")}`
+          "yyyy-MM-dd HH:mm:ss",
+        )}&end_date=${format(endDate, "yyyy-MM-dd HH:mm:ss")}`,
     );
 
     if (shiftGroupResponse.status === 200) {
@@ -155,7 +155,7 @@ export default function ShiftGroup(
             months[start_date.getMonth()] === selectedMonth &&
             start_date.getFullYear() === selectedYear
           );
-        })
+        }),
       );
     }
   };
@@ -167,7 +167,7 @@ export default function ShiftGroup(
       setShiftGroups(
         shiftGroupsResponse.data.shift_groups.sort((a, b) => {
           return a.shift_group.localeCompare(b.shift_group);
-        })
+        }),
       );
     }
   };
@@ -205,7 +205,7 @@ export default function ShiftGroup(
                           onSelect={(currentValue) => {
                             setSelectedMonth(
                               currentValue.split("")[0].toUpperCase() +
-                                currentValue.substring(1)
+                                currentValue.substring(1),
                             );
                             setMonthOpen(false);
                           }}
@@ -215,7 +215,7 @@ export default function ShiftGroup(
                               "mr-2 h-4 w-4",
                               selectedMonth === month
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           {month}
@@ -259,7 +259,7 @@ export default function ShiftGroup(
                               "mr-2 h-4 w-4",
                               selectedYear === year
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           {year}
@@ -282,8 +282,8 @@ export default function ShiftGroup(
               <div className="flex items-center overflow-y-auto">
                 {Array(
                   getDaysInMonth(
-                    new Date(`${selectedYear}-${selectedMonth}-01`)
-                  )
+                    new Date(`${selectedYear}-${selectedMonth}-01`),
+                  ),
                 )
                   .fill()
                   .map((_, i) => (
@@ -295,7 +295,7 @@ export default function ShiftGroup(
             </TabsList>
           </div>
           {Array(
-            getDaysInMonth(new Date(`${selectedYear}-${selectedMonth}-01`))
+            getDaysInMonth(new Date(`${selectedYear}-${selectedMonth}-01`)),
           )
             .fill()
             .map((_, i) => (
@@ -317,7 +317,7 @@ export default function ShiftGroup(
                     <TableBody>
                       {data.filter((schedule) => {
                         let day = parseInt(
-                          format(new Date(schedule.start_date), "dd")
+                          format(new Date(schedule.start_date), "dd"),
                         );
 
                         return day === i + 1;
@@ -325,7 +325,7 @@ export default function ShiftGroup(
                         data
                           .filter((schedule) => {
                             let day = parseInt(
-                              format(new Date(schedule.start_date), "dd")
+                              format(new Date(schedule.start_date), "dd"),
                             );
 
                             return day === i + 1;

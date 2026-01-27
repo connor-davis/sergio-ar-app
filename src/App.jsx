@@ -35,11 +35,11 @@ function App() {
         setShiftGroups(
           shiftGroupsResponse.data.shift_groups
             .filter(({ shift_group }) =>
-              shift_group.includes(searchShiftGroupValue)
+              shift_group.includes(searchShiftGroupValue),
             )
             .sort((a, b) => {
               return a.shift_group.localeCompare(b.shift_group);
-            })
+            }),
         );
 
         setLoading(false);
@@ -60,7 +60,7 @@ function App() {
       setShiftGroups(
         shiftGroupsResponse.data.shift_groups.sort((a, b) => {
           return a.shift_group.localeCompare(b.shift_group);
-        })
+        }),
       );
 
       setLoading(false);
@@ -89,7 +89,7 @@ function App() {
                   key={index}
                   className="flex items-center justify-between w-full h-12 px-3 py-2 space-x-3 rounded-md cursor-pointer hover:bg-neutral-200"
                   onClick={() => {
-                    navigate(`/${shiftGroup.shift_group}`);
+                    navigate(`/${encodeURIComponent(shiftGroup.shift_group)}`);
                   }}
                 >
                   <div>{shiftGroup.shift_group}</div>
