@@ -55,7 +55,7 @@ export default function ExportDataModal() {
             .sort((a, b) => {
               return a.shift_group.localeCompare(b.shift_group);
             })
-            .map(({ shift_group }) => shift_group)
+            .map(({ shift_group }) => shift_group),
         );
       }
     }, 100);
@@ -98,10 +98,10 @@ export default function ExportDataModal() {
         "&end_date=" +
         format(date.to, "yyyy-MM-dd") +
         "&shift_group=" +
-        shiftGroup,
+        encodeURIComponent(shiftGroup),
       {
         responseType: "blob",
-      }
+      },
     );
 
     const consolidatedStatus = consolidatedResponse.status;
@@ -153,7 +153,7 @@ export default function ExportDataModal() {
                     variant={"outline"}
                     className={cn(
                       "w-full justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
+                      !date && "text-muted-foreground",
                     )}
                   >
                     <CalendarIcon className="w-4 h-4 mr-2" />
@@ -201,7 +201,7 @@ export default function ExportDataModal() {
                           onClick={() =>
                             setSelectedGroups([
                               ...selectedGroups.filter(
-                                (ogroup) => ogroup !== group
+                                (ogroup) => ogroup !== group,
                               ),
                             ])
                           }
@@ -243,11 +243,11 @@ export default function ExportDataModal() {
                               setSelectedGroups([
                                 ...selectedGroups.filter(
                                   (group) =>
-                                    group.toLowerCase() !== currentValue
+                                    group.toLowerCase() !== currentValue,
                                 ),
                                 shiftGroups.find(
                                   (group) =>
-                                    group.toLowerCase() === currentValue
+                                    group.toLowerCase() === currentValue,
                                 ),
                               ]);
                               setSelectGroupOpen(false);
