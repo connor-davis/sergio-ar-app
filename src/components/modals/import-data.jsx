@@ -57,8 +57,8 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
     }
 
     if (dialogueOne instanceof File) {
-      if (!dialogueOne.name.endsWith(".xlsx")) {
-        setError("Dialogue 1 must be an Excel file.");
+      if (!dialogueOne.name.endsWith(".csv")) {
+        setError("Dialogue 1 must be a CSV file.");
         setImporting(false);
         return;
       }
@@ -71,8 +71,8 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
     }
 
     if (dialogueTwo instanceof File) {
-      if (!dialogueTwo.name.endsWith(".xlsx")) {
-        setError("Dialogue 2 must be an Excel file.");
+      if (!dialogueTwo.name.endsWith(".csv")) {
+        setError("Dialogue 2 must be a CSV file.");
         setImporting(false);
         return;
       }
@@ -94,8 +94,8 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
 
     setImporting(true);
 
-    formData.append("dialogue-1.xlsx", dialogueOne);
-    formData.append("dialogue-2.xlsx", dialogueTwo);
+    formData.append("dialogue-1.csv", dialogueOne);
+    formData.append("dialogue-2.csv", dialogueTwo);
     formData.append("invoicing-report.csv", invoicingReport);
 
     const importResponse = await axios.post(
