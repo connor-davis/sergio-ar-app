@@ -57,8 +57,8 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
     }
 
     if (dialogueOne instanceof File) {
-      if (!dialogueOne.name.endsWith(".csv")) {
-        setError("Dialogue 1 must be a CSV file.");
+      if (!dialogueOne.name.endsWith(".csv") && !dialogueOne.name.endsWith(".xlsx")) {
+        setError("Dialogue 1 must be a CSV or XLSX file.");
         setImporting(false);
         return;
       }
@@ -71,8 +71,8 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
     }
 
     if (dialogueTwo instanceof File) {
-      if (!dialogueTwo.name.endsWith(".csv")) {
-        setError("Dialogue 2 must be a CSV file.");
+      if (!dialogueTwo.name.endsWith(".csv") && !dialogueTwo.name.endsWith(".xlsx")) {
+        setError("Dialogue 2 must be a CSV or XLSX file.");
         setImporting(false);
         return;
       }
@@ -174,6 +174,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
               <div>{format(addDays(date, -6), "PPP")}'s Dialogue</div>
               <Input
                 type="file"
+                accept=".csv,.xlsx"
                 onChange={(event) => setDialogueOne(event.target.files[0])}
               />
             </div>
@@ -181,6 +182,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
               <div>{format(date, "PPP")}'s Dialogue</div>
               <Input
                 type="file"
+                accept=".csv,.xlsx"
                 onChange={(event) => setDialogueTwo(event.target.files[0])}
               />
             </div>
@@ -188,6 +190,7 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
               <div>{format(date, "MMMM")}'s Invoicing Document</div>
               <Input
                 type="file"
+                accept=".csv"
                 onChange={(event) => setInvoicingReport(event.target.files[0])}
               />
             </div>
