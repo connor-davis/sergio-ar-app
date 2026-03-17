@@ -94,8 +94,11 @@ export default function ImportDataModal({ onDataImported = () => {} }) {
 
     setImporting(true);
 
-    formData.append("dialogue-1.csv", dialogueOne);
-    formData.append("dialogue-2.csv", dialogueTwo);
+    const dialogueOneExtension = dialogueOne.name.split(".").pop();
+    const dialogueTwoExtension = dialogueTwo.name.split(".").pop();
+
+    formData.append(`dialogue-1.${dialogueOneExtension}`, dialogueOne);
+    formData.append(`dialogue-2.${dialogueTwoExtension}`, dialogueTwo);
     formData.append("invoicing-report.csv", invoicingReport);
 
     const importResponse = await axios.post(
